@@ -32,10 +32,12 @@ build/
 ### VS Code ###
 .vscode/
 
-### application.properties ###
-/src/main/resources/application.yml
 
 ### maven
 .mvn/
 mvnw
 mvnw.cmd
+
+*Test.java
+**/test/
+**/application-dev.yml

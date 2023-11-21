@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+    profiles:
+        active: dev
+    datasource:
+        driver-class-name: ${douyin.datasource.driver-class-name}
+        url: jdbc:mysql://${douyin.datasource.host}:${douyin.datasource.port}/${douyin.datasource.database}
+        username: ${douyin.datasource.username}
+        password: ${douyin.datasource.password}
+    servlet:
+        multipart:
+            max-file-size: 10MB # 修改默认单个文件的最大上传限制
+            max-request-size: 100MB # 修改默认单个请求的最大上传限制
+    output:
+        ansi:
+            enabled: always # SpringBoot配置控制台彩色日志输出
+
+mybatis:
+    configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 配置mybatis的日志, 指定输出到控制台
+        map-underscore-to-camel-case: true # 开启mybatis的驼峰命名自动映射开关 a_column ------> aCloumn
