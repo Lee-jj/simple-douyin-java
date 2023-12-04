@@ -20,4 +20,4 @@ spring:
 mybatis:
     configuration:
         log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 配置mybatis的日志, 指定输出到控制台
-        map-underscore-to-camel-case: true # 开启mybatis的驼峰命名自动映射开关 a_column ------> aCloumn
+        map-underscore-to-camel-case: false # 关闭mybatis的驼峰命名自动映射开关
