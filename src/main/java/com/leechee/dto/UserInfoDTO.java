@@ -8,7 +8,7 @@ import lombok.Data;
 public class UserInfoDTO implements Serializable {
     
     // 用户id
-    private String user_id;
+    private Long user_id;
 
     // 用户鉴权token
     private String token;

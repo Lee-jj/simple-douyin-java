@@ -3,27 +3,28 @@ server:
 
 spring:
   profiles:
-      active: dev
+    active: dev
   datasource:
-      driver-class-name: ${douyin.datasource.driver-class-name}
-      url: jdbc:mysql://${douyin.datasource.host}:${douyin.datasource.port}/${douyin.datasource.database}
-      username: ${douyin.datasource.username}
-      password: ${douyin.datasource.password}
+    driver-class-name: ${douyin.datasource.driver-class-name}
+    url: jdbc:mysql://${douyin.datasource.host}:${douyin.datasource.port}/${douyin.datasource.database}
+    username: ${douyin.datasource.username}
+    password: ${douyin.datasource.password}
   servlet:
       multipart:
-          max-file-size: 10MB # 修改默认单个文件的最大上传限制
-          max-request-size: 100MB # 修改默认单个请求的最大上传限制
+        max-file-size: 10MB # 修改默认单个文件的最大上传限制
+        max-request-size: 100MB # 修改默认单个请求的最大上传限制
   output:
-      ansi:
-          enabled: always # SpringBoot配置控制台彩色日志输出
+    ansi:
+      enabled: always # SpringBoot配置控制台彩色日志输出
 
 mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.leechee.entity
   configuration:
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 配置mybatis的日志, 指定输出到控制台
-      map-underscore-to-camel-case: false # 关闭mybatis的驼峰命名自动映射开关
+    map-underscore-to-camel-case: false # 关闭mybatis的驼峰命名自动映射开关
 
 douyin:
   jwt:
-      secret-key: ${douyin.jwt.secret-key}
-      ttl: 7200000
-      token-name: token
+    secret-key: ${douyin.jwt.secret-key}
+    ttl: 7200000
+    token-name: token
