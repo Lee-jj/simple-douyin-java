@@ -3,7 +3,6 @@ package com.leechee.entity;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.leechee.vo.UserVO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +20,7 @@ public class Comments implements Serializable {
     private Long id;
 
     // 评论用户信息
-    private UserVO user;
+    private Long user_id;
 
     // 视频id
     private Long video_id;
