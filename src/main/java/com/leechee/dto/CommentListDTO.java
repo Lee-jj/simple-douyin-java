@@ -11,5 +11,5 @@ public class CommentListDTO implements Serializable{
     private String token;
 
     // 视频id
-    private String video_id;
+    private Long video_id;
 }

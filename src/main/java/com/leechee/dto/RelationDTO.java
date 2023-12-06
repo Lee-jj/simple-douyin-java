@@ -11,8 +11,8 @@ public class RelationDTO implements Serializable{
     private String token;
 
     // 对方用户id
-    private String to_user_id;
+    private Long to_user_id;
 
     // 1-关注，2-取消关注
-    private String action_type;
+    private Integer action_type;
 }
