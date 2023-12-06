@@ -28,17 +28,17 @@ public class UserServiceImpl implements UserService{
         String name = userRegisterLoginDTO.getUsername();
         String password = userRegisterLoginDTO.getPassword();
 
-        // 判断用户名长度是否小于等于32位
-        if (name.length() > 32) {
-            throw new UserException(MessageConstant.USERNAME_TO_LONG);
+        // 判断用户名长度是否大于等于6位小于等于32位
+        if (name.length() > 32 || name.length() < 6) {
+            throw new UserException(MessageConstant.USERNAME_LENGTH_ERROR);
         }
 
         // 判断用户名是否存在
         // 数据库中name约束为唯一，重复会抛出数据库异常
 
-        // 判断密码长度是否小于等于32位
-        if (password.length() > 32) {
-            throw new UserException(MessageConstant.PASSWORD_TO_LONG);
+        // 判断密码长度是否大于等于6位小于等于32位
+        if (password.length() > 32 || password.length() < 6) {
+            throw new UserException(MessageConstant.PASSWORD_LENGTH_ERROR);
         }
 
         // TODO OSS默认图片链接
@@ -55,6 +55,31 @@ public class UserServiceImpl implements UserService{
         userMapper.insert(users);
 
         return users.getId();
+    }
+
+    /**
+     * 用户登录
+     * @param userRegisterLoginDTO
+     * @return
+     */
+    @Override
+    public Long login(UserRegisterLoginDTO userRegisterLoginDTO) {
+        String name = userRegisterLoginDTO.getUsername();
+        String password = userRegisterLoginDTO.getPassword();
+
+        // 从数据库中查找该用户名
+        Users usersDB = userMapper.getByUsername(name);
+        if (usersDB == null) {
+            throw new UserException(MessageConstant.USER_NOT_EXIST);
+        }
+
+        // 校验密码
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
+        if (!password.equals(usersDB.getPassword())) {
+            throw new UserException(MessageConstant.PASSWORD_ERROR);
+        }
+
+        return usersDB.getId();
     }
     
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leechee.constant.JwtClaimsConstant;
 import com.leechee.dto.UserRegisterLoginDTO;
 import com.leechee.properties.JwtProperties;
 import com.leechee.result.UserResult;
@@ -34,10 +35,26 @@ public class UserController {
      */
     @PostMapping("/register")
     public UserResult register(UserRegisterLoginDTO userRegisterLoginDTO) {
-        log.info("用户注册,{},{}", userRegisterLoginDTO);
+        log.info("用户注册,{}", userRegisterLoginDTO);
         Long userId = userService.register(userRegisterLoginDTO);
 
         Map<String, Object> claims = new HashMap<>();
+        claims.put(JwtClaimsConstant.USER_ID, userId);
+        String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), jwtProperties.getTtl(), claims);
+        return UserResult.success(userId, token);
+    }
+
+    /**
+     * 用户登录
+     * @param userRegisterLoginDTO
+     * @return
+     */
+    @PostMapping("/login")
+    public UserResult login(UserRegisterLoginDTO userRegisterLoginDTO) {
+        log.info("用户登录,{}", userRegisterLoginDTO);
+        Long userId = userService.login(userRegisterLoginDTO);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(JwtClaimsConstant.USER_ID, userId);
         String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), jwtProperties.getTtl(), claims);
         return UserResult.success(userId, token);
     }

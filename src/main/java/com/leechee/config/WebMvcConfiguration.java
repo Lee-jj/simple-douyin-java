@@ -23,6 +23,6 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport{
         log.info("注册自定义拦截器...");
         registry.addInterceptor(jwtTokenInterceptor)
                 .addPathPatterns("/douyin/**")
-                .excludePathPatterns("/douyin/feed", "/douyin/user/register", "douyin/user/login");
+                .excludePathPatterns("/douyin/feed", "/douyin/user/register", "/douyin/user/login");
     }
 }
