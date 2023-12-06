@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.leechee.mapper.FavoriteMapper">
+
+    <!-- getById --> 
+    <select id="getById" resultType="com.leechee.entity.Favorites">
+        select * from favorite
+        <where>
+            <if test="user_id != null"> and user_id = #{user_id} </if>
+            <if test="video_id != null"> and video_id = #{video_id} </if>
+        </where>
+    </select>
+
+</mapper>

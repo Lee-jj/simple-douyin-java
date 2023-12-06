@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.leechee.mapper.VideoMapper">
+
+    <!-- getByCreateTime --> 
+    <select id="getByCreateTime" resultType="com.leechee.entity.Videos">
+        select * from videos
+        <where>
+            <if test="latest_time != null"> and create_time &lt; #{latest_time} </if>
+        </where>
+        order by create_time desc limit 30
+    </select>
+
+</mapper>
