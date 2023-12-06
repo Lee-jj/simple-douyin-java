@@ -30,5 +30,5 @@ public class Comments implements Serializable {
 
     // 评论发布日期，格式 mm-dd
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd")
-    private  String create_date;
+    private Long create_date;
 }

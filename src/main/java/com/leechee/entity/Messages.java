@@ -30,5 +30,5 @@ public class Messages implements Serializable {
 
     // 消息创建时间
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private String create_time;
+    private Long create_time;
 }

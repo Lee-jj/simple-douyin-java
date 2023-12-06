@@ -21,7 +21,7 @@ public class Videos implements Serializable{
     
     // 提交时间
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private String create_time;
+    private Long create_time;
 
     // 用户id
     private Long user_id;
