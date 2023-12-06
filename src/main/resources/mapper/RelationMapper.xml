@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.leechee.mapper.RelationMapper">
+
+
+    <!-- getById --> 
+    <select id="getById" resultType="com.leechee.entity.Relations">
+        select * from relations
+        <where>
+            <if test="from_user_id != null"> and from_user_id = #{from_user_id} </if>
+            <if test="to_user_id!= null"> and to_user_id = #{to_user_id} </if>
+        </where>
+    </select>
+
+</mapper>

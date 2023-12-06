@@ -4,16 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.leechee.constant.JwtClaimsConstant;
+import com.leechee.dto.UserInfoDTO;
 import com.leechee.dto.UserRegisterLoginDTO;
 import com.leechee.properties.JwtProperties;
+import com.leechee.result.UserInfoResult;
 import com.leechee.result.UserResult;
 import com.leechee.service.UserService;
 import com.leechee.utils.JwtUtil;
+import com.leechee.vo.UserVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,5 +61,17 @@ public class UserController {
         claims.put(JwtClaimsConstant.USER_ID, userId);
         String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), jwtProperties.getTtl(), claims);
         return UserResult.success(userId, token);
+    }
+
+    /**
+     * 获取用户信息
+     * @param userInfoDTO
+     * @return
+     */
+    @GetMapping
+    public UserInfoResult getUserInfo(UserInfoDTO userInfoDTO) {
+        log.info("获取用户信息,{}", userInfoDTO);
+        UserVO userVO = userService.getUserInfo(userInfoDTO);
+        return UserInfoResult.success(userVO);
     }
 }
