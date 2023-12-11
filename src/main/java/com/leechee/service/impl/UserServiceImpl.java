@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -27,6 +28,11 @@ public class UserServiceImpl implements UserService{
     private UserMapper userMapper;
     @Autowired
     private RelationMapper relationMapper;
+
+    @Value("${douyin.default.avatar}")
+    private String avatar;
+    @Value("${douyin.default.background-image}")
+    private String backgroundImage;
 
     /**
      * 用户注册
@@ -52,15 +58,11 @@ public class UserServiceImpl implements UserService{
             throw new UserException(MessageConstant.PASSWORD_LENGTH_ERROR);
         }
 
-        // TODO OSS默认图片链接
-        String avatar = "default avatar link";
-        String background_image = "default background image link";
-
         Users users = Users.builder()
                .name(name)
                .password(DigestUtils.md5DigestAsHex(password.getBytes()))   // 密码加密
                .avatar(avatar)
-               .background_image(background_image)
+               .background_image(backgroundImage)
                .build();
 
         userMapper.insert(users);

@@ -33,3 +33,6 @@ douyin:
     access-key: ${douyin.qiniu.access-key}
     secret-key: ${douyin.qiniu.secret-key}
     domain: ${douyin.qiniu.domain}
+  default:
+    avatar: ${douyin.default.avatar}
+    background-image: ${douyin.default.background-image}
