@@ -11,5 +11,6 @@ public class MessageConstant {
     public static final String PASSWORD_LENGTH_ERROR = "密码长度不足6位或超过32位";
     public static final String USER_NOT_EXIST = "该用户不存在";
     public static final String PASSWORD_ERROR = "用户名或密码错误";
+    public static final String FILE_UPLOAD_FILED = "文件上传失败";
 
 }

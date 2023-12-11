@@ -28,3 +28,8 @@ douyin:
     secret-key: ${douyin.jwt.secret-key}
     ttl: 7200000
     token-name: token
+  qiniuoss:
+    bucket-name: ${douyin.qiniu.bucket-name}
+    access-key: ${douyin.qiniu.access-key}
+    secret-key: ${douyin.qiniu.secret-key}
+    domain: ${douyin.qiniu.domain}
