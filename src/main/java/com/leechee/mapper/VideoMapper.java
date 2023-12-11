@@ -17,4 +17,9 @@ public interface VideoMapper {
      */
     List<Videos> getByCreateTime(FeedDTO feedDTO);
     
+    /**
+     * 新增视频
+     * @param videos
+     */
+    void insert(Videos videos);
 }

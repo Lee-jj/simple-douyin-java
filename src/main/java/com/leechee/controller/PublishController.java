@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.leechee.constant.MessageConstant;
 import com.leechee.result.Result;
+import com.leechee.service.PublishService;
 import com.leechee.utils.QiniuOssUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,16 @@ public class PublishController {
 
     @Autowired
     private QiniuOssUtil qiniuOssUtil;
+    @Autowired
+    private PublishService publishService;
     
+    /**
+     * 上传视频
+     * @param file
+     * @param token
+     * @param title
+     * @return
+     */
     @PostMapping("/action")
     public Result action(@RequestPart("data") MultipartFile file, @RequestPart("token") String token, @RequestParam("title") String title) {
         log.info("文件上传标题,{}", title);
@@ -39,6 +49,9 @@ public class PublishController {
             String filePath = qiniuOssUtil.upload(file.getBytes(), objectName);
 
             log.info("文件上传到：{}", filePath);
+
+            publishService.action(filePath, title);
+
             return Result.success();
         } catch (IOException e) {
             log.error("文件上传失败，{}", e);

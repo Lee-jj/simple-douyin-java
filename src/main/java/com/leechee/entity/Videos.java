@@ -1,6 +1,7 @@
 package com.leechee.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -21,7 +22,7 @@ public class Videos implements Serializable{
     
     // 提交时间
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Long create_time;
+    private LocalDateTime create_time;
 
     // 用户id
     private Long user_id;

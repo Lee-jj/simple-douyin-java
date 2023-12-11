@@ -13,4 +13,11 @@
         order by create_time desc limit 30
     </select>
 
+    <!-- insert --> 
+    <insert id="insert">
+        insert into videos (create_time, user_id, play_url, title, cover_url) 
+        values
+        (#{create_time}, #{user_id}, #{play_url}, #{title}, #{cover_url})
+    </insert>
+
 </mapper>
