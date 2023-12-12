@@ -37,7 +37,7 @@ public class UserController {
      * @param userRegisterLoginDTO
      * @return
      */
-    @PostMapping("/register")
+    @PostMapping("/register/")
     public UserResult register(UserRegisterLoginDTO userRegisterLoginDTO) {
         log.info("用户注册,{}", userRegisterLoginDTO);
         Long userId = userService.register(userRegisterLoginDTO);
@@ -53,7 +53,7 @@ public class UserController {
      * @param userRegisterLoginDTO
      * @return
      */
-    @PostMapping("/login")
+    @PostMapping("/login/")
     public UserResult login(UserRegisterLoginDTO userRegisterLoginDTO) {
         log.info("用户登录,{}", userRegisterLoginDTO);
         Long userId = userService.login(userRegisterLoginDTO);
@@ -68,7 +68,7 @@ public class UserController {
      * @param userInfoDTO
      * @return
      */
-    @GetMapping
+    @GetMapping("/")
     public UserInfoResult getUserInfo(UserInfoDTO userInfoDTO) {
         log.info("获取用户信息,{}", userInfoDTO);
         UserVO userVO = userService.getUserInfo(userInfoDTO);

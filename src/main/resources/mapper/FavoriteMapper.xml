@@ -6,7 +6,7 @@
 
     <!-- getById --> 
     <select id="getById" resultType="com.leechee.entity.Favorites">
-        select * from favorite
+        select * from favorites
         <where>
             <if test="user_id != null"> and user_id = #{user_id} </if>
             <if test="video_id != null"> and video_id = #{video_id} </if>

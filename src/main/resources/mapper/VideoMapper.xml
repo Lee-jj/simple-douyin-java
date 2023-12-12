@@ -8,7 +8,7 @@
     <select id="getByCreateTime" resultType="com.leechee.entity.Videos">
         select * from videos
         <where>
-            <if test="latest_time != null"> and create_time &lt; #{latest_time} </if>
+            <if test="latest_time != null"> and UNIX_TIMESTAMP(create_time)*1000 &lt; #{latest_time} </if>
         </where>
         order by create_time desc limit 30
     </select>
