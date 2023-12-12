@@ -1,9 +1,11 @@
 package com.leechee.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,9 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.leechee.constant.MessageConstant;
+import com.leechee.dto.UserInfoDTO;
 import com.leechee.result.Result;
+import com.leechee.result.VideoPublishResult;
 import com.leechee.service.PublishService;
 import com.leechee.utils.QiniuOssUtil;
+import com.leechee.vo.VideoVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,5 +62,17 @@ public class PublishController {
             log.error("文件上传失败，{}", e);
         }
         return Result.error(MessageConstant.FILE_UPLOAD_FILED);
+    }
+
+    /**
+     * 获取用户发布列表
+     * @param userInfoDTO
+     * @return
+     */
+    @GetMapping("/list/")
+    public VideoPublishResult list(UserInfoDTO userInfoDTO) {
+        log.info("获取用户发布列表，{}", userInfoDTO);
+        List<VideoVO> videoList = publishService.list(userInfoDTO);
+        return VideoPublishResult.success(videoList);
     }
 }
