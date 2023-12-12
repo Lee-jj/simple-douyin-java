@@ -48,4 +48,12 @@ public interface VideoMapper {
      */
     @Select("select user_id from videos where id = #{video_id}")
     Long getUserIdByVideoId(Long video_id);
+
+    /**
+     * 根据id获得视频
+     * @param id
+     * @return
+     */
+    @Select("select * from videos where id = #{id}")
+    Videos getById(Long id);
 }

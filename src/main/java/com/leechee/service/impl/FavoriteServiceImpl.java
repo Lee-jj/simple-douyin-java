@@ -1,7 +1,9 @@
 package com.leechee.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,12 +13,20 @@ import com.leechee.constant.StatusConstant;
 import com.leechee.context.BaseContext;
 import com.leechee.dto.FavoriteDTO;
 import com.leechee.dto.FavoriteSearchDTO;
+import com.leechee.dto.RelationSearchDTO;
+import com.leechee.dto.UserInfoDTO;
 import com.leechee.entity.Favorites;
+import com.leechee.entity.Relations;
+import com.leechee.entity.Users;
+import com.leechee.entity.Videos;
 import com.leechee.exception.FavoriteException;
 import com.leechee.mapper.FavoriteMapper;
+import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
 import com.leechee.mapper.VideoMapper;
 import com.leechee.service.FavoriteService;
+import com.leechee.vo.UserVO;
+import com.leechee.vo.VideoVO;
 
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
@@ -27,6 +37,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     private UserMapper userMapper;
     @Autowired
     private VideoMapper videoMapper;
+    @Autowired
+    private RelationMapper relationMapper;
 
     /**
      * 点赞操作
@@ -89,6 +101,68 @@ public class FavoriteServiceImpl implements FavoriteService {
         } else {
             throw new FavoriteException(MessageConstant.ERROR_ACTION_TYPE);
         }
+    }
+
+
+    /**
+     * 获取用户点赞列表
+     * @param userInfoDTO
+     * @return
+     */
+    @Override
+    public List<VideoVO> list(UserInfoDTO userInfoDTO) {
+
+        Long user_id = userInfoDTO.getUser_id();
+        Long currentId = BaseContext.getCurrentId();
+
+        // 从点赞表中查询指定用户的点赞记录
+        FavoriteSearchDTO favoriteSearchDTO = new FavoriteSearchDTO();
+        favoriteSearchDTO.setUser_id(user_id);
+        List<Favorites> favoritesList = favoriteMapper.getById(favoriteSearchDTO);
+
+        // 构造返回对象
+        List<VideoVO> videoList = new ArrayList<>();
+        for (Favorites favorites: favoritesList) {
+
+            // 构造video对象
+            Long video_id = favorites.getVideo_id();
+            VideoVO videoVO = new VideoVO();
+            Videos videosDB = videoMapper.getById(video_id);
+            BeanUtils.copyProperties(videosDB, videoVO);
+
+            // 构造user对象
+            Long authorId = videosDB.getUser_id();
+            Users usersDB = userMapper.getById(authorId);
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(usersDB, userVO);
+
+            // 设置关注信息
+            RelationSearchDTO relationSearchDTO = new RelationSearchDTO();
+            relationSearchDTO.setFrom_user_id(currentId);
+            relationSearchDTO.setTo_user_id(authorId);
+            List<Relations> relations = relationMapper.getById(relationSearchDTO);
+            if (relations != null && relations.size() > 0) {
+                userVO.set_follow(true);
+            } else {
+                userVO.set_follow(false);
+            }
+
+            // 查找点赞信息
+            FavoriteSearchDTO favoriteSearchDTO2 = new FavoriteSearchDTO();
+            favoriteSearchDTO2.setUser_id(currentId);
+            favoriteSearchDTO2.setVideo_id(video_id);
+            List<Favorites> favorites2 = favoriteMapper.getById(favoriteSearchDTO2);
+            if (favorites2 != null && favorites2.size() > 0) {
+                videoVO.set_favorite(true);
+            } else {
+                videoVO.set_favorite(false);
+            }
+
+            videoVO.setAuthor(userVO);
+            videoList.add(videoVO);
+        }
+
+        return videoList;
     }
     
 }
