@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.leechee.context.BaseContext;
 import com.leechee.dto.FavoriteSearchDTO;
@@ -45,18 +46,24 @@ public class PublishServiceImpl implements PublishService{
      * @param filePath
      * @param title
      */
+    @Transactional
     @Override
     public void action(String filePath, String title) {
         // TODO 截取上传视频的第一帧作为封面
         String coverUrl = defaultAvatar;
+
+        Long currentId = BaseContext.getCurrentId();
         Videos videos = Videos.builder()
                .title(title)
-               .user_id(BaseContext.getCurrentId())
+               .user_id(currentId)
                .play_url(filePath)
                .cover_url(coverUrl)
                .create_time(LocalDateTime.now())
                .build();
         videoMapper.insert(videos);
+
+        // 同步更新用户表中的作品数量
+        userMapper.updateWorkCount(currentId);
     }
 
     /**

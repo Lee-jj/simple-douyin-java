@@ -2,6 +2,7 @@ package com.leechee.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.leechee.entity.Users;
 
@@ -29,5 +30,12 @@ public interface UserMapper {
      */
     @Select("select * from users where id = #{user_id}")
     Users getById(Long user_id);
+
+    /**
+     * 上传视频后，用户作品数量+1
+     * @param currentId
+     */
+    @Update("update users set work_count = work_count + 1 where id = #{currentId}")
+    void updateWorkCount(Long currentId);
     
 }
