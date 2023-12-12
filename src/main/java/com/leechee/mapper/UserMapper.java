@@ -38,4 +38,19 @@ public interface UserMapper {
     @Update("update users set work_count = work_count + 1 where id = #{currentId}")
     void updateWorkCount(Long currentId);
     
+    /**
+     * 更新用户点赞总数
+     * @param user_id
+     * @param count
+     */
+    @Update("update users set favorite_count = favorite_count + #{count} where id = #{user_id}")
+    void updateFavoriteCount(Long user_id, Integer count);
+
+    /**
+     * 更新用户获赞总数
+     * @param user_id
+     * @param count
+     */
+    @Update("update users set total_favorited = total_favorited + #{count} where id = #{user_id}")
+    void updateTotalFavorited(Long user_id, Integer count);
 }

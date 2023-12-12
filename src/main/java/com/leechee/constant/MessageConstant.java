@@ -12,5 +12,8 @@ public class MessageConstant {
     public static final String USER_NOT_EXIST = "该用户不存在";
     public static final String PASSWORD_ERROR = "用户名或密码错误";
     public static final String FILE_UPLOAD_FILED = "文件上传失败";
+    public static final String DONOT_REPEAT_ACTION = "请勿重复操作";
+    public static final String DONOT_REPEAT_CANCEL = "请勿重复取消操作";
+    public static final String ERROR_ACTION_TYPE = "错误的操作类型";
 
 }
