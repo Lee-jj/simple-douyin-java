@@ -40,7 +40,7 @@ public class PublishController {
      * @param title
      * @return
      */
-    @PostMapping("/action")
+    @PostMapping("/action/")
     public Result action(@RequestPart("data") MultipartFile file, @RequestPart("token") String token, @RequestParam("title") String title) {
         log.info("文件上传标题,{}", title);
         try {
