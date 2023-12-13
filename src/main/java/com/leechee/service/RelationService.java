@@ -21,5 +21,12 @@ public interface RelationService {
      * @return
      */
     List<UserVO> followList(UserInfoDTO userInfoDTO);
+
+    /**
+     * 获取用户粉丝列表
+     * @param userInfoDTO
+     * @return
+     */
+    List<UserVO> followerList(UserInfoDTO userInfoDTO);
     
 }

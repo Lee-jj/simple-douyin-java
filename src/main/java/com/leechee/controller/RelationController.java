@@ -48,4 +48,16 @@ public class RelationController {
         List<UserVO> userList = relationService.followList(userInfoDTO);
         return RelationResult.success(userList);
     }
+
+    /**
+     * 获取用户粉丝列表
+     * @param userInfoDTO
+     * @return
+     */
+    @GetMapping("/follower/list/")
+    public RelationResult followerList(UserInfoDTO userInfoDTO) {
+        log.info("获取用户粉丝列表，{}", userInfoDTO);
+        List<UserVO> userList = relationService.followerList(userInfoDTO);
+        return RelationResult.success(userList);
+    }
 }

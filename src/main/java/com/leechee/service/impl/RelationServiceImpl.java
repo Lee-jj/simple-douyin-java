@@ -119,5 +119,42 @@ public class RelationServiceImpl implements RelationService {
 
         return userVOs;
     }
+
+    /**
+     * 获取用户粉丝列表
+     * @param userInfoDTO
+     * @return
+     */
+    @Override
+    public List<UserVO> followerList(UserInfoDTO userInfoDTO) {
+        Long userId = userInfoDTO.getUser_id();
+        Long currentId = BaseContext.getCurrentId();
+
+        RelationSearchDTO relationSearchDTO = new RelationSearchDTO();
+        relationSearchDTO.setTo_user_id(userId);
+        List<Relations> relationList = relationMapper.getById(relationSearchDTO);
+
+        List<UserVO> userVOs = new ArrayList<>();
+        for (Relations relations: relationList) {
+            Long fromUserId = relations.getFrom_user_id();
+            Users usersDB = userMapper.getById(fromUserId);
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(usersDB, userVO);
+
+            RelationSearchDTO relationSearchDTO2 = new RelationSearchDTO();
+            relationSearchDTO2.setFrom_user_id(currentId);
+            relationSearchDTO2.setTo_user_id(fromUserId);
+            List<Relations> relations2 = relationMapper.getById(relationSearchDTO2);
+            if (relations2!= null && relations2.size() > 0) {
+                userVO.set_follow(true);
+            } else {
+                userVO.set_follow(false);
+            }
+
+            userVOs.add(userVO);
+        }
+
+        return userVOs;
+    }
     
 }
