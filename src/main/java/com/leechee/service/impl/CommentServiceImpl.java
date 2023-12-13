@@ -1,6 +1,8 @@
 package com.leechee.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +12,14 @@ import com.leechee.constant.MessageConstant;
 import com.leechee.constant.StatusConstant;
 import com.leechee.context.BaseContext;
 import com.leechee.dto.CommentActionDTO;
+import com.leechee.dto.CommentListDTO;
+import com.leechee.dto.RelationSearchDTO;
 import com.leechee.entity.Comments;
+import com.leechee.entity.Relations;
 import com.leechee.entity.Users;
 import com.leechee.exception.CommentException;
 import com.leechee.mapper.CommentMapper;
+import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
 import com.leechee.service.CommentService;
 import com.leechee.vo.CommentVO;
@@ -26,6 +32,8 @@ public class CommentServiceImpl implements CommentService{
     private CommentMapper commentMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RelationMapper relationMapper;
 
     /**
      * 添加或删除评论
@@ -72,6 +80,45 @@ public class CommentServiceImpl implements CommentService{
         } else {
             throw new CommentException(MessageConstant.ERROR_ACTION_TYPE);
         }
+    }
+
+    /**
+     * 获取视频评论列表
+     * @param commentListDTO
+     * @return
+     */
+    @Override
+    public List<CommentVO> list(CommentListDTO commentListDTO) {
+        Long video_id = commentListDTO.getVideo_id();
+        List<Comments> commentsList = commentMapper.getByVideoId(video_id);
+
+        List<CommentVO> commentVOs = new ArrayList<>();
+        for (Comments comments: commentsList) {
+            CommentVO commentVO = new CommentVO();
+            BeanUtils.copyProperties(comments, commentVO);
+
+            Long userId = comments.getUser_id();
+            Users usersDB = userMapper.getById(userId);
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(usersDB, userVO);
+
+            // 关注信息设置
+            Long currentId = BaseContext.getCurrentId();
+            RelationSearchDTO relationSearchDTO = new RelationSearchDTO();
+            relationSearchDTO.setFrom_user_id(currentId);
+            relationSearchDTO.setTo_user_id(userId);
+            List<Relations> relationsList = relationMapper.getById(relationSearchDTO);
+            if (relationsList != null && relationsList.size() > 0) {
+                userVO.set_follow(true);
+            } else {
+                userVO.set_follow(false);
+            }
+
+            commentVO.setUser(userVO);
+            commentVOs.add(commentVO);
+        }
+
+        return commentVOs;
     }
     
 }

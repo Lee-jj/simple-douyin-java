@@ -1,5 +1,7 @@
 package com.leechee.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -31,4 +33,12 @@ public interface CommentMapper {
      */
     @Select("select * from comments where id = #{id}")
     Comments getById(Long id);
+
+    /**
+     * 根据视频id获取评论列表
+     * @param video_id
+     * @return
+     */
+    @Select("select * from comments where video_id = #{video_id}")
+    List<Comments> getByVideoId(Long video_id);
 }
