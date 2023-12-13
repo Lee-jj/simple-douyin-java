@@ -1,7 +1,9 @@
 package com.leechee.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,11 +13,14 @@ import com.leechee.constant.StatusConstant;
 import com.leechee.context.BaseContext;
 import com.leechee.dto.RelationDTO;
 import com.leechee.dto.RelationSearchDTO;
+import com.leechee.dto.UserInfoDTO;
 import com.leechee.entity.Relations;
+import com.leechee.entity.Users;
 import com.leechee.exception.RelationException;
 import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
 import com.leechee.service.RelationService;
+import com.leechee.vo.UserVO;
 
 @Service
 public class RelationServiceImpl implements RelationService {
@@ -76,6 +81,43 @@ public class RelationServiceImpl implements RelationService {
         } else {
             throw new RelationException(MessageConstant.ERROR_ACTION_TYPE);
         }
+    }
+
+    /**
+     * 获取用户关注列表
+     * @param userInfoDTO
+     * @return
+     */
+    @Override
+    public List<UserVO> followList(UserInfoDTO userInfoDTO) {
+        Long userId = userInfoDTO.getUser_id();
+        Long currentId = BaseContext.getCurrentId();
+
+        RelationSearchDTO relationSearchDTO = new RelationSearchDTO();
+        relationSearchDTO.setFrom_user_id(userId);
+        List<Relations> relationList = relationMapper.getById(relationSearchDTO);
+        
+        List<UserVO> userVOs = new ArrayList<>();
+        for (Relations relations: relationList) {
+            Long toUserId = relations.getTo_user_id();
+            Users usersDB = userMapper.getById(toUserId);
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(usersDB, userVO);
+
+            RelationSearchDTO relationSearchDTO2 = new RelationSearchDTO();
+            relationSearchDTO2.setFrom_user_id(currentId);
+            relationSearchDTO2.setTo_user_id(toUserId);
+            List<Relations> relations2 = relationMapper.getById(relationSearchDTO2);
+            if (relations2!= null && relations2.size() > 0) {
+                userVO.set_follow(true);
+            } else {
+                userVO.set_follow(false);
+            }
+
+            userVOs.add(userVO);
+        }
+
+        return userVOs;
     }
     
 }

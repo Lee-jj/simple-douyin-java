@@ -1,13 +1,19 @@
 package com.leechee.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.leechee.dto.RelationDTO;
+import com.leechee.dto.UserInfoDTO;
+import com.leechee.result.RelationResult;
 import com.leechee.result.Result;
 import com.leechee.service.RelationService;
+import com.leechee.vo.UserVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,4 +37,15 @@ public class RelationController {
         return Result.success();
     }
 
+    /**
+     * 获取用户关注列表
+     * @param userInfoDTO
+     * @return
+     */
+    @GetMapping("/follow/list/")
+    public RelationResult followList(UserInfoDTO userInfoDTO) {
+        log.info("获取用户关注列表，{}", userInfoDTO);
+        List<UserVO> userList = relationService.followList(userInfoDTO);
+        return RelationResult.success(userList);
+    }
 }

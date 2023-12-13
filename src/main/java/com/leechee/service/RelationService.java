@@ -1,6 +1,10 @@
 package com.leechee.service;
 
+import java.util.List;
+
 import com.leechee.dto.RelationDTO;
+import com.leechee.dto.UserInfoDTO;
+import com.leechee.vo.UserVO;
 
 public interface RelationService {
 
@@ -10,5 +14,12 @@ public interface RelationService {
      * @return
      */
     void action(RelationDTO relationDTO);
+
+    /**
+     * 获取用户关注列表
+     * @param userInfoDTO
+     * @return
+     */
+    List<UserVO> followList(UserInfoDTO userInfoDTO);
     
 }
