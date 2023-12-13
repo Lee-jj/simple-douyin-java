@@ -46,4 +46,8 @@ public class UserVO implements Serializable{
     // 点赞数量
     private Long favorite_count;
 
+    public boolean getIs_follow() {
+        return is_follow;
+    }
+
 }

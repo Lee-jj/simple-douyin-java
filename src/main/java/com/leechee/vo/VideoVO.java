@@ -36,4 +36,8 @@ public class VideoVO implements Serializable{
 
     // 视频标题
     private String title;
+
+    public boolean getIs_favorite() {
+        return is_favorite;
+    }
 }
