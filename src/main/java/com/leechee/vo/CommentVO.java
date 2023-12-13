@@ -1,6 +1,7 @@
 package com.leechee.vo;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -26,5 +27,5 @@ public class CommentVO implements Serializable{
 
     // 评论发布日期，格式 mm-dd
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd")
-    private  String create_date;
+    private LocalDateTime create_date;
 }
