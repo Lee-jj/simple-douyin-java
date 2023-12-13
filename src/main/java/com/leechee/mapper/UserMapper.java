@@ -53,4 +53,20 @@ public interface UserMapper {
      */
     @Update("update users set total_favorited = total_favorited + #{count} where id = #{user_id}")
     void updateTotalFavorited(Long user_id, Integer count);
+
+    /**
+     * 更新用户关注总数
+     * @param user_id
+     * @param count
+     */
+    @Update("update users set follow_count = follow_count + #{count} where id = #{user_id}")
+    void updateFollowCount(Long user_id, Integer count);
+
+    /**
+     * 更新用户粉丝总数
+     * @param user_id
+     * @param count
+     */
+    @Update("update users set follower_count = follower_count + #{count} where id = #{user_id}")
+    void updateFollowerCount(Long user_id, Integer count);
 }
