@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.leechee.constant.MessageConstant;
 import com.leechee.constant.StatusConstant;
@@ -21,6 +22,7 @@ import com.leechee.exception.CommentException;
 import com.leechee.mapper.CommentMapper;
 import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
+import com.leechee.mapper.VideoMapper;
 import com.leechee.service.CommentService;
 import com.leechee.vo.CommentVO;
 import com.leechee.vo.UserVO;
@@ -34,12 +36,15 @@ public class CommentServiceImpl implements CommentService{
     private UserMapper userMapper;
     @Autowired
     private RelationMapper relationMapper;
+    @Autowired
+    private VideoMapper videoMapper;
 
     /**
      * 添加或删除评论
      * @param commentActionDTO
      * @return
      */
+    @Transactional
     @Override
     public CommentVO action(CommentActionDTO commentActionDTO) {
 
@@ -56,6 +61,9 @@ public class CommentServiceImpl implements CommentService{
                    .build();
 
             commentMapper.insert(comments);
+
+            // 同步更新视频的评论总数
+            videoMapper.updateCommentCount(videoId, 1);
 
             CommentVO commentVO = new CommentVO();
             Users users = userMapper.getById(currentId);
@@ -75,6 +83,10 @@ public class CommentServiceImpl implements CommentService{
                 throw new CommentException(MessageConstant.COMMENT_NOT_EXIST);
             }
             commentMapper.delete(comment_id);
+
+            // 同步更新视频的评论总数
+            videoMapper.updateCommentCount(videoId, -1);
+
             return null;
 
         } else {

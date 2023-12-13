@@ -56,4 +56,12 @@ public interface VideoMapper {
      */
     @Select("select * from videos where id = #{id}")
     Videos getById(Long id);
+
+    /**
+     * 更新视频评论总数
+     * @param video_id
+     * @param count
+     */
+    @Update("update videos set comment_count = comment_count + #{count} where id = #{video_id}")
+    void updateCommentCount(Long video_id, Integer count);
 }
