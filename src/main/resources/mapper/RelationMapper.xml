@@ -14,4 +14,11 @@
         </where>
     </select>
 
+    <!-- getCommonByCurrentId --> 
+    <select id="getCommonByCurrentId" resultType="com.java.lang.Long">
+        select r1.to_user_id
+        from relations r1, relations r2
+        where r1.from_user_id = #{userId} and r2.to_user_id = #{userId} and r1.to_user_id = r2.from_user_id
+    </select>
+
 </mapper>

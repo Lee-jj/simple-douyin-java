@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.leechee.dto.RelationDTO;
 import com.leechee.dto.UserInfoDTO;
+import com.leechee.result.FriendResult;
 import com.leechee.result.RelationResult;
 import com.leechee.result.Result;
 import com.leechee.service.RelationService;
+import com.leechee.vo.FriendUserVO;
 import com.leechee.vo.UserVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -59,5 +61,17 @@ public class RelationController {
         log.info("获取用户粉丝列表，{}", userInfoDTO);
         List<UserVO> userList = relationService.followerList(userInfoDTO);
         return RelationResult.success(userList);
+    }
+
+    /**
+     * 获取用户好友列表
+     * @param userInfoDTO
+     * @return
+     */
+    @GetMapping("/friend/list/")
+    public FriendResult friendList(UserInfoDTO userInfoDTO) {
+        log.info("获取用户好友列表,{}", userInfoDTO);
+        List<FriendUserVO> userList = relationService.friendList(userInfoDTO);
+        return FriendResult.success(userList);
     }
 }

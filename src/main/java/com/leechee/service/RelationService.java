@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.leechee.dto.RelationDTO;
 import com.leechee.dto.UserInfoDTO;
+import com.leechee.vo.FriendUserVO;
 import com.leechee.vo.UserVO;
 
 public interface RelationService {
@@ -28,5 +29,12 @@ public interface RelationService {
      * @return
      */
     List<UserVO> followerList(UserInfoDTO userInfoDTO);
+
+    /**
+     * 获取用户好友列表
+     * @param userInfoDTO
+     * @return
+     */
+    List<FriendUserVO> friendList(UserInfoDTO userInfoDTO);
     
 }

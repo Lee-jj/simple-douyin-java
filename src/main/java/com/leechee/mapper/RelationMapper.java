@@ -32,4 +32,11 @@ public interface RelationMapper {
      */
     @Delete("delete from relations where id = #{id}")
     void delete(Long id);
+
+    /**
+     * 获取当前用户的朋友（与id互相关注）
+     * @param userId
+     * @return
+     */
+    List<Long> getCommonByCurrentId(Long userId);
 }

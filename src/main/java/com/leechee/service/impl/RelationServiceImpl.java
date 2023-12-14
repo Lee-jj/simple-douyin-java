@@ -20,6 +20,7 @@ import com.leechee.exception.RelationException;
 import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
 import com.leechee.service.RelationService;
+import com.leechee.vo.FriendUserVO;
 import com.leechee.vo.UserVO;
 
 @Service
@@ -155,6 +156,35 @@ public class RelationServiceImpl implements RelationService {
         }
 
         return userVOs;
+    }
+
+    /**
+     * 获取用户好友列表
+     * @param userInfoDTO
+     * @return
+     */
+    @Override
+    public List<FriendUserVO> friendList(UserInfoDTO userInfoDTO) {
+        Long currentId = BaseContext.getCurrentId();
+
+        // 获取互相关注的用户列表
+        List<Long> friendIdList = relationMapper.getCommonByCurrentId(currentId);
+
+        List<FriendUserVO> friendUserVOs = new ArrayList<>();
+        for (Long friendId: friendIdList) {
+
+            FriendUserVO friendUserVO = new FriendUserVO();
+
+            Users userDB = userMapper.getById(friendId);
+            BeanUtils.copyProperties(userDB, friendUserVO);
+            friendUserVO.set_follow(true);
+
+            // TODO 需要从message表中查询最后一条消息记录并填充到friendUserVO中
+
+
+            friendUserVOs.add(friendUserVO);
+        }
+        return friendUserVOs;
     }
     
 }
