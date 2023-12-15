@@ -1,8 +1,7 @@
 package com.leechee.entity;
 
 import java.io.Serializable;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +28,5 @@ public class Messages implements Serializable {
     private String content;
 
     // 消息创建时间
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Long create_time;
+    private LocalDateTime create_time;
 }
