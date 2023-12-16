@@ -1,6 +1,7 @@
 package com.leechee.vo;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -29,7 +30,7 @@ public class MessageVO  implements Serializable{
 
     // 消息创建时间
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private String create_time;
+    private LocalDateTime create_time;
 
 
 }
