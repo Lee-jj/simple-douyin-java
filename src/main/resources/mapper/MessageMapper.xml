@@ -8,8 +8,7 @@
     <select id="getByUserId" resultType="com.leechee.entity.Messages">
         select * from messages
         <where>
-            <if test="from_user_id != null"> and from_user_id = #{from_user_id} </if>
-            <if test="to_user_id != null"> and to_user_id = #{to_user_id} </if>
+            from_user_id = #{from_user_id} and to_user_id = #{to_user_id} or to_user_id = #{from_user_id} and from_user_id = #{to_user_id}
             <if test="create_time != null"> and create_time &gt; #{create_time} </if>
         </where>
         order by create_time asc
