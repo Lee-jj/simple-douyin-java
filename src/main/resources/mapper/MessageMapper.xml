@@ -15,4 +15,11 @@
         order by create_time asc
     </select>
 
+    <!-- getLatestById --> 
+    <select id="getLatestById" resultType="com.leechee.entity.Messages">
+        select * from messages
+        where from_user_id = #{from_user_id} and to_user_id = #{to_user_id} or to_user_id = #{from_user_id} and from_user_id = #{to_user_id}
+        order by create_time desc limit 1
+    </select>
+
 </mapper>

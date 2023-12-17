@@ -11,12 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.leechee.constant.MessageConstant;
 import com.leechee.constant.StatusConstant;
 import com.leechee.context.BaseContext;
+import com.leechee.dto.MessageSearchDTO;
 import com.leechee.dto.RelationDTO;
 import com.leechee.dto.RelationSearchDTO;
 import com.leechee.dto.UserInfoDTO;
+import com.leechee.entity.Messages;
 import com.leechee.entity.Relations;
 import com.leechee.entity.Users;
 import com.leechee.exception.RelationException;
+import com.leechee.mapper.MessageMapper;
 import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
 import com.leechee.service.RelationService;
@@ -30,6 +33,8 @@ public class RelationServiceImpl implements RelationService {
     private RelationMapper relationMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private MessageMapper messageMapper;
 
     /**
      * 关注与取消关注
@@ -179,8 +184,20 @@ public class RelationServiceImpl implements RelationService {
             BeanUtils.copyProperties(userDB, friendUserVO);
             friendUserVO.set_follow(true);
 
-            // TODO 需要从message表中查询最后一条消息记录并填充到friendUserVO中
+            // 从message中查询fId和cId的最后一次聊天记录
+            MessageSearchDTO messageSearchDTO = new MessageSearchDTO();
+            messageSearchDTO.setFrom_user_id(currentId);
+            messageSearchDTO.setTo_user_id(friendId);
+            Messages messagesDB = messageMapper.getLatestById(messageSearchDTO);
 
+            if (messagesDB != null) {
+                friendUserVO.setMessage(messagesDB.getContent());
+                if (messagesDB.getFrom_user_id().equals(currentId)) {
+                    friendUserVO.setMsgType((long) 1);
+                } else {
+                    friendUserVO.setMsgType((long) 0);
+                }
+            }
 
             friendUserVOs.add(friendUserVO);
         }

@@ -20,4 +20,11 @@ public interface MessageMapper {
      * @return
      */
     List<Messages> getByUserId(MessageSearchDTO messageSearchDTO);
+
+    /**
+     * 根据id获得最新消息
+     * @param messageSearchDTO
+     * @return
+     */
+    Messages getLatestById(MessageSearchDTO messageSearchDTO);
 }
