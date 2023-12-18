@@ -1,15 +1,27 @@
 package com.leechee.service.impl;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.Java2DFrameConverter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.leechee.constant.FrameLengthConstant;
+import com.leechee.constant.MessageConstant;
 import com.leechee.context.BaseContext;
 import com.leechee.dto.FavoriteSearchDTO;
 import com.leechee.dto.RelationSearchDTO;
@@ -18,6 +30,7 @@ import com.leechee.entity.Favorites;
 import com.leechee.entity.Relations;
 import com.leechee.entity.Users;
 import com.leechee.entity.Videos;
+import com.leechee.exception.PublishException;
 import com.leechee.mapper.FavoriteMapper;
 import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
@@ -38,9 +51,6 @@ public class PublishServiceImpl implements PublishService{
     @Autowired
     private FavoriteMapper favoriteMapper;
 
-    @Value("${douyin.default.avatar}")
-    private String defaultAvatar;
-
     /**
      * 上传视频
      * @param filePath
@@ -48,16 +58,14 @@ public class PublishServiceImpl implements PublishService{
      */
     @Transactional
     @Override
-    public void action(String filePath, String title) {
-        // TODO 截取上传视频的第一帧作为封面
-        String coverUrl = defaultAvatar;
+    public void action(String filePath, String coverPath, String title) {
 
         Long currentId = BaseContext.getCurrentId();
         Videos videos = Videos.builder()
                .title(title)
                .user_id(currentId)
                .play_url(filePath)
-               .cover_url(coverUrl)
+               .cover_url(coverPath)
                .create_time(LocalDateTime.now())
                .build();
         videoMapper.insert(videos);
@@ -117,5 +125,65 @@ public class PublishServiceImpl implements PublishService{
         
         return videoVOList;
     }
+
+    /**
+     * 抽帧: 根据视频文件获得封面文件
+     * @param file
+     * @return
+     */
+    @Override
+    public MultipartFile getCoverFile(MultipartFile file) {
+
+        MultipartFile coverFile = null;
+        
+        try {
+            InputStream inputStream = new ByteArrayInputStream(file.getBytes());
+            FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(inputStream);
+
+            grabber.start();
+
+            // 获取视频的总帧数
+            int videoLength = grabber.getLengthInFrames();
+
+            Frame frame = null;
+            int i = 0;
+            while (i < videoLength) {
+                frame = grabber.grabImage();
+                if (i > FrameLengthConstant.FRAME_LENGTH && frame.image != null) break;
+                i++;
+            }
+
+            // 绘制图片
+            Java2DFrameConverter converter = new Java2DFrameConverter();
+            BufferedImage bufferedImage = converter.getBufferedImage(frame);
+
+            // 转为multipartfile
+            coverFile = bufferedImageToMultipartFile(bufferedImage);
+
+            grabber.close();
+
+        } catch (Exception e) {
+            throw new PublishException(MessageConstant.IMAGE_FILE_UPLOAD_FILED);
+        }
+
+        return coverFile;
+    }
     
+    /**
+     * BufferedImage 转 MultipartFile
+     * @param bufferedImage
+     * @return
+     */
+    private MultipartFile bufferedImageToMultipartFile(BufferedImage bufferedImage) {
+        MultipartFile cover = null;
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
+            InputStream input = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+            cover = new MockMultipartFile("coverFile", "coverfile.jpg", "multipart/form-data", input);
+        } catch (Exception e) {
+            throw new PublishException(MessageConstant.FAILED_TO_CONVERT_MULTI);
+        }
+        return cover;
+    }
 }

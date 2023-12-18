@@ -2,6 +2,8 @@ package com.leechee.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.leechee.dto.UserInfoDTO;
 import com.leechee.vo.VideoVO;
 
@@ -12,7 +14,7 @@ public interface PublishService {
      * @param filePath
      * @param title
      */
-    void action(String filePath, String title);
+    void action(String filePath, String coverPath, String title);
 
     /**
      * 获取用户发布列表
@@ -20,5 +22,12 @@ public interface PublishService {
      * @return
      */
     List<VideoVO> list(UserInfoDTO userInfoDTO);
+
+    /**
+     * 根据视频文件获得封面文件
+     * @param file
+     * @return
+     */
+    MultipartFile getCoverFile(MultipartFile file);
     
 }

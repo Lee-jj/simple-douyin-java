@@ -44,6 +44,7 @@ public class PublishController {
     public Result action(@RequestPart("data") MultipartFile file, @RequestPart("token") String token, @RequestParam("title") String title) {
         log.info("文件上传标题,{}", title);
         try {
+            // 1. 上传视频文件
             // 获取原始文件名
             String originalFilename = file.getOriginalFilename();
             // 截取原始文件名的后缀
@@ -53,11 +54,22 @@ public class PublishController {
             // 获取文件请求路径
             String filePath = qiniuOssUtil.upload(file.getBytes(), objectName);
 
-            log.info("文件上传到：{}", filePath);
+            log.info("视频文件上传到：{}", filePath);
 
-            publishService.action(filePath, title);
+
+            // 2. 上传抽帧的视频封面文件
+            MultipartFile coverFile = publishService.getCoverFile(file);
+            originalFilename = coverFile.getOriginalFilename();
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            objectName = UUID.randomUUID().toString() + extension;
+            String coverPath = qiniuOssUtil.upload(coverFile.getBytes(), objectName);
+
+            log.info("封面文件上传到: {}", coverPath);
+
+            publishService.action(filePath, coverPath, title);
 
             return Result.success();
+            
         } catch (IOException e) {
             log.error("文件上传失败，{}", e);
         }
