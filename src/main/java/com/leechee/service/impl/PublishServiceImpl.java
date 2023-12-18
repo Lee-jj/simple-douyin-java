@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.leechee.constant.FrameLengthConstant;
 import com.leechee.constant.MessageConstant;
 import com.leechee.context.BaseContext;
+import com.leechee.dto.DeleteVideoDTO;
 import com.leechee.dto.FavoriteSearchDTO;
 import com.leechee.dto.RelationSearchDTO;
 import com.leechee.dto.UserInfoDTO;
@@ -31,6 +32,7 @@ import com.leechee.entity.Relations;
 import com.leechee.entity.Users;
 import com.leechee.entity.Videos;
 import com.leechee.exception.PublishException;
+import com.leechee.mapper.CommentMapper;
 import com.leechee.mapper.FavoriteMapper;
 import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
@@ -50,6 +52,8 @@ public class PublishServiceImpl implements PublishService{
     private RelationMapper relationMapper;
     @Autowired
     private FavoriteMapper favoriteMapper;
+    @Autowired
+    private CommentMapper commentMapper;
 
     /**
      * 上传视频
@@ -71,7 +75,7 @@ public class PublishServiceImpl implements PublishService{
         videoMapper.insert(videos);
 
         // 同步更新用户表中的作品数量
-        userMapper.updateWorkCount(currentId);
+        userMapper.updateWorkCount(currentId, 1);
     }
 
     /**
@@ -185,5 +189,43 @@ public class PublishServiceImpl implements PublishService{
             throw new PublishException(MessageConstant.FAILED_TO_CONVERT_MULTI);
         }
         return cover;
+    }
+
+
+    /**
+     * 删除视频
+     * @param deleteVideoDTO
+     * @return
+     */
+    @Transactional
+    @Override
+    public void deleteVideo(DeleteVideoDTO deleteVideoDTO) {
+        Long currentId = BaseContext.getCurrentId();
+        Long videoId = deleteVideoDTO.getVideo_id();
+
+        // 判断该用户是否上传过该视频
+        Videos videosDB = videoMapper.getById(videoId);
+        if (videosDB != null && videosDB.getUser_id().equals(currentId)) {
+
+            // videos删除一条记录
+            videoMapper.deleteById(videoId);
+
+            // comments删除videoId的全部记录
+            commentMapper.deleteByVideoId(videoId);
+
+            // favorites删除videoId的全部记录，同时统计对应的userId
+            List<Long> userList = favoriteMapper.getUserIdByVideoId(videoId);
+            favoriteMapper.deleteByVideoId(videoId);
+
+            // users直接更新workCount，totalFavorited，根据统计的userId列表更新favoriteCount
+            userMapper.updateWorkCount(currentId, -1);
+            userMapper.updateTotalFavorited(currentId, -1 * videosDB.getFavorite_count());
+            if (userList != null && userList.size() > 0)
+                userMapper.updateFavoriteCountBatch(userList, (long) -1);
+
+        } else {
+            // 该用户上传的视频不存在
+            throw new PublishException(MessageConstant.VIDEO_NOT_EXIST);
+        }
     }
 }

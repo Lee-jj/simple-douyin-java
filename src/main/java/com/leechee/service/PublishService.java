@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.leechee.dto.DeleteVideoDTO;
 import com.leechee.dto.UserInfoDTO;
 import com.leechee.vo.VideoVO;
 
@@ -29,5 +30,12 @@ public interface PublishService {
      * @return
      */
     MultipartFile getCoverFile(MultipartFile file);
+
+    /**
+     * 删除视频
+     * @param deleteVideoDTO
+     * @return
+     */
+    void deleteVideo(DeleteVideoDTO deleteVideoDTO);
     
 }

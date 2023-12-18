@@ -2,6 +2,7 @@ package com.leechee.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -64,4 +65,11 @@ public interface VideoMapper {
      */
     @Update("update videos set comment_count = comment_count + #{count} where id = #{video_id}")
     void updateCommentCount(Long video_id, Integer count);
+    
+    /**
+     * 根据id删除视频
+     * @param id
+     */
+    @Delete("delete from videos where id = #{id}")
+    void deleteById(Long id);
 }

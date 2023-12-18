@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.leechee.constant.MessageConstant;
+import com.leechee.dto.DeleteVideoDTO;
 import com.leechee.dto.UserInfoDTO;
 import com.leechee.result.Result;
 import com.leechee.result.VideoPublishResult;
@@ -86,5 +88,17 @@ public class PublishController {
         log.info("获取用户发布列表，{}", userInfoDTO);
         List<VideoVO> videoList = publishService.list(userInfoDTO);
         return VideoPublishResult.success(videoList);
+    }
+
+    /**
+     * 删除视频
+     * @param deleteVideoDTO
+     * @return
+     */
+    @DeleteMapping
+    public Result delete(DeleteVideoDTO deleteVideoDTO) {
+        log.info("删除视频,{}", deleteVideoDTO);
+        publishService.deleteVideo(deleteVideoDTO);
+        return Result.success();
     }
 }

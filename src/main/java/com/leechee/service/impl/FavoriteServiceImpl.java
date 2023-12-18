@@ -75,7 +75,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
                 // 同步更新用户获得总赞数与点赞总数
                 userMapper.updateFavoriteCount(currentId, 1);
-                userMapper.updateTotalFavorited(authorId, 1);
+                userMapper.updateTotalFavorited(authorId, (long) 1);
 
             } else {
                 // 已经点过赞了
@@ -92,7 +92,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
                 // 同步更新用户获得总赞数与点赞总数
                 userMapper.updateFavoriteCount(currentId, -1);
-                userMapper.updateTotalFavorited(authorId, -1);
+                userMapper.updateTotalFavorited(authorId, (long) -1);
 
             } else {
                 // 没有点过赞

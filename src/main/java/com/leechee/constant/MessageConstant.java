@@ -18,5 +18,6 @@ public class MessageConstant {
     public static final String DONOT_REPEAT_CANCEL = "请勿重复取消操作";
     public static final String ERROR_ACTION_TYPE = "错误的操作类型";
     public static final String COMMENT_NOT_EXIST = "该评论不存在";
+    public static final String VIDEO_NOT_EXIST = "该视频不存在";
 
 }

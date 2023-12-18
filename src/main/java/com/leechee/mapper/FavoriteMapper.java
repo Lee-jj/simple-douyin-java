@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import com.leechee.dto.FavoriteSearchDTO;
 import com.leechee.entity.Favorites;
@@ -32,4 +33,19 @@ public interface FavoriteMapper {
      */
     @Delete("delete from favorites where id = #{id}")
     void delete(Long id);
+
+    /**
+     * 根据视频id删除点赞记录
+     * @param video_id
+     */
+    @Delete("delete from favorites where video_id = #{video_id}")
+    void deleteByVideoId(Long video_id);
+
+    /**
+     * 根据视频id获得点赞用户id
+     * @param video_id
+     * @return
+     */
+    @Select("select user_id from favorites where video_id = #{video_id}")
+    List<Long> getUserIdByVideoId(Long video_id);
 }

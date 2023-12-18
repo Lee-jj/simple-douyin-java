@@ -9,4 +9,12 @@
         insert into users (name, password, avatar, background_image) values (#{name}, #{password}, #{avatar}, #{background_image})
     </insert>
 
+    <!-- updateFavoriteCountBatch --> 
+    <update id="updateFavoriteCountBatch">
+        update users set favorite_count = favorite_count + #{count} where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
 </mapper>

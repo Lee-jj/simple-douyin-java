@@ -41,4 +41,11 @@ public interface CommentMapper {
      */
     @Select("select * from comments where video_id = #{video_id}")
     List<Comments> getByVideoId(Long video_id);
+
+    /**
+     * 根据视频id删除评论
+     * @param video_id
+     */
+    @Delete("delete from comments where video_id = #{video_id}")
+    void deleteByVideoId(Long video_id);
 }
