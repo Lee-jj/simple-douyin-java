@@ -40,7 +40,7 @@ public interface VideoMapper {
      * @param count
      */
     @Update("update videos set favorite_count = favorite_count + #{count} where id = #{video_id}")
-    void updateFavoriteCount(Long video_id, Integer count);
+    void updateFavoriteCount(Long video_id, Long count);
 
     /**
      * 根据视频id获取用户id
@@ -64,7 +64,7 @@ public interface VideoMapper {
      * @param count
      */
     @Update("update videos set comment_count = comment_count + #{count} where id = #{video_id}")
-    void updateCommentCount(Long video_id, Integer count);
+    void updateCommentCount(Long video_id, Long count);
     
     /**
      * 根据id删除视频

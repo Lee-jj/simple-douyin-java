@@ -69,11 +69,11 @@ public class FavoriteServiceImpl implements FavoriteService {
                 favoriteMapper.insert(favoriteSearchDTO);
 
                 // 同步更新视频点赞数
-                videoMapper.updateFavoriteCount(videoId, 1);
+                videoMapper.updateFavoriteCount(videoId, 1L);
 
                 // 同步更新用户获得总赞数与点赞总数
-                userMapper.updateFavoriteCount(currentId, 1);
-                userMapper.updateTotalFavorited(authorId, (long) 1);
+                userMapper.updateFavoriteCount(currentId, 1L);
+                userMapper.updateTotalFavorited(authorId, 1L);
 
             } else {
                 // 已经点过赞了
@@ -86,11 +86,11 @@ public class FavoriteServiceImpl implements FavoriteService {
                 favoriteMapper.delete(favorites.getId());
 
                 // 同步更新视频点赞数
-                videoMapper.updateFavoriteCount(videoId, -1);
+                videoMapper.updateFavoriteCount(videoId, -1L);
 
                 // 同步更新用户获得总赞数与点赞总数
-                userMapper.updateFavoriteCount(currentId, -1);
-                userMapper.updateTotalFavorited(authorId, (long) -1);
+                userMapper.updateFavoriteCount(currentId, -1L);
+                userMapper.updateTotalFavorited(authorId, -1L);
 
             } else {
                 // 没有点过赞

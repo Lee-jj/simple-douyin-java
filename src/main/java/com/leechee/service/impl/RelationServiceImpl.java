@@ -64,8 +64,8 @@ public class RelationServiceImpl implements RelationService {
                 relationMapper.insert(relationSearchDTO);
 
                 // 同步更新用户关注数与粉丝数
-                userMapper.updateFollowCount(currentId, 1);
-                userMapper.updateFollowerCount(userId, 1);
+                userMapper.updateFollowCount(currentId, 1L);
+                userMapper.updateFollowerCount(userId, 1L);
 
             } else {
                 // 重复关注
@@ -79,8 +79,8 @@ public class RelationServiceImpl implements RelationService {
                 relationMapper.delete(relations.getId());
 
                 // 同步更新用户关注数与粉丝数
-                userMapper.updateFollowCount(currentId, -1);
-                userMapper.updateFollowerCount(userId, -1);
+                userMapper.updateFollowCount(currentId, -1L);
+                userMapper.updateFollowerCount(userId, -1L);
 
             } else {
                 // 重复取消
@@ -180,9 +180,9 @@ public class RelationServiceImpl implements RelationService {
             if (messagesDB != null) {
                 friendUserVO.setMessage(messagesDB.getContent());
                 if (messagesDB.getFrom_user_id().equals(currentId)) {
-                    friendUserVO.setMsgType((long) 1);
+                    friendUserVO.setMsgType(1L);
                 } else {
-                    friendUserVO.setMsgType((long) 0);
+                    friendUserVO.setMsgType(0L);
                 }
             }
 

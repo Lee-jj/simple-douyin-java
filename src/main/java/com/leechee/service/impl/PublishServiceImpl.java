@@ -71,7 +71,7 @@ public class PublishServiceImpl implements PublishService{
         videoMapper.insert(videos);
 
         // 同步更新用户表中的作品数量
-        userMapper.updateWorkCount(currentId, 1);
+        userMapper.updateWorkCount(currentId, 1L);
     }
 
     /**
@@ -198,10 +198,10 @@ public class PublishServiceImpl implements PublishService{
             favoriteMapper.deleteByVideoId(videoId);
 
             // users直接更新workCount，totalFavorited，根据统计的userId列表更新favoriteCount
-            userMapper.updateWorkCount(currentId, -1);
+            userMapper.updateWorkCount(currentId, -1L);
             userMapper.updateTotalFavorited(currentId, -1 * videosDB.getFavorite_count());
             if (userList != null && userList.size() > 0)
-                userMapper.updateFavoriteCountBatch(userList, (long) -1);
+                userMapper.updateFavoriteCountBatch(userList, -1L);
 
         } else {
             // 该用户上传的视频不存在

@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService{
             commentMapper.insert(comments);
 
             // 同步更新视频的评论总数
-            videoMapper.updateCommentCount(videoId, 1);
+            videoMapper.updateCommentCount(videoId, 1L);
 
             CommentVO commentVO = new CommentVO();
             Users users = userMapper.getById(currentId);
@@ -83,7 +83,7 @@ public class CommentServiceImpl implements CommentService{
             commentMapper.delete(comment_id);
 
             // 同步更新视频的评论总数
-            videoMapper.updateCommentCount(videoId, -1);
+            videoMapper.updateCommentCount(videoId, -1L);
 
             return null;
 

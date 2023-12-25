@@ -38,7 +38,7 @@ public interface UserMapper {
      * @param currentId
      */
     @Update("update users set work_count = work_count + #{count} where id = #{currentId}")
-    void updateWorkCount(Long currentId, Integer count);
+    void updateWorkCount(Long currentId, Long count);
     
     /**
      * 更新用户点赞总数
@@ -46,7 +46,7 @@ public interface UserMapper {
      * @param count
      */
     @Update("update users set favorite_count = favorite_count + #{count} where id = #{user_id}")
-    void updateFavoriteCount(Long user_id, Integer count);
+    void updateFavoriteCount(Long user_id, Long count);
 
     /**
      * 更新用户获赞总数
@@ -62,7 +62,7 @@ public interface UserMapper {
      * @param count
      */
     @Update("update users set follow_count = follow_count + #{count} where id = #{user_id}")
-    void updateFollowCount(Long user_id, Integer count);
+    void updateFollowCount(Long user_id, Long count);
 
     /**
      * 更新用户粉丝总数
@@ -70,7 +70,7 @@ public interface UserMapper {
      * @param count
      */
     @Update("update users set follower_count = follower_count + #{count} where id = #{user_id}")
-    void updateFollowerCount(Long user_id, Integer count);
+    void updateFollowerCount(Long user_id, Long count);
 
     /**
      * 根据用户id批量更新用户点赞总数
