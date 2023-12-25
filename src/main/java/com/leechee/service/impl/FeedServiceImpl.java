@@ -8,17 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.leechee.context.BaseContext;
-import com.leechee.dto.FavoriteSearchDTO;
 import com.leechee.dto.FeedDTO;
-import com.leechee.dto.RelationSearchDTO;
-import com.leechee.entity.Favorites;
-import com.leechee.entity.Relations;
 import com.leechee.entity.Users;
 import com.leechee.entity.Videos;
-import com.leechee.mapper.FavoriteMapper;
-import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
 import com.leechee.mapper.VideoMapper;
+import com.leechee.service.CommonService;
 import com.leechee.service.FeedService;
 import com.leechee.vo.UserVO;
 import com.leechee.vo.VideoVO;
@@ -31,9 +26,7 @@ public class FeedServiceImpl implements FeedService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private RelationMapper relationMapper;
-    @Autowired
-    private FavoriteMapper favoriteMapper;
+    private CommonService commonService;
 
     /**
      * 获取视频流
@@ -62,26 +55,10 @@ public class FeedServiceImpl implements FeedService {
                 videoVO.set_favorite(false);
             } else {
                 // 判断当前登录用户是否关注视频作者
-                RelationSearchDTO relationSearchDTO = new RelationSearchDTO();
-                relationSearchDTO.setFrom_user_id(currentId);
-                relationSearchDTO.setTo_user_id(video.getUser_id());
-                List<Relations> relations = relationMapper.getById(relationSearchDTO);
-                if (relations != null && relations.size() > 0) {
-                    userVO.set_follow(true);
-                } else {
-                    userVO.set_follow(false);
-                }
+                userVO.set_follow(commonService.getRelation(currentId, video.getUser_id()));
 
                 // 判断当前登录用户是否点赞视频
-                FavoriteSearchDTO favoriteSearchDTO = new FavoriteSearchDTO();
-                favoriteSearchDTO.setUser_id(currentId);
-                favoriteSearchDTO.setVideo_id(video.getId());
-                List<Favorites> favorites = favoriteMapper.getById(favoriteSearchDTO);
-                if (favorites != null && favorites.size() > 0) {
-                    videoVO.set_favorite(true);
-                } else {
-                    videoVO.set_favorite(false);
-                }
+                videoVO.set_favorite(commonService.getFavorite(currentId, video.getId()));
             }
 
             videoVO.setAuthor(userVO);

@@ -14,16 +14,14 @@ import com.leechee.constant.StatusConstant;
 import com.leechee.context.BaseContext;
 import com.leechee.dto.CommentActionDTO;
 import com.leechee.dto.CommentListDTO;
-import com.leechee.dto.RelationSearchDTO;
 import com.leechee.entity.Comments;
-import com.leechee.entity.Relations;
 import com.leechee.entity.Users;
 import com.leechee.exception.CommentException;
 import com.leechee.mapper.CommentMapper;
-import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
 import com.leechee.mapper.VideoMapper;
 import com.leechee.service.CommentService;
+import com.leechee.service.CommonService;
 import com.leechee.vo.CommentVO;
 import com.leechee.vo.UserVO;
 
@@ -35,9 +33,9 @@ public class CommentServiceImpl implements CommentService{
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private RelationMapper relationMapper;
-    @Autowired
     private VideoMapper videoMapper;
+    @Autowired
+    private CommonService commonService;
 
     /**
      * 添加或删除评论
@@ -116,15 +114,7 @@ public class CommentServiceImpl implements CommentService{
 
             // 关注信息设置
             Long currentId = BaseContext.getCurrentId();
-            RelationSearchDTO relationSearchDTO = new RelationSearchDTO();
-            relationSearchDTO.setFrom_user_id(currentId);
-            relationSearchDTO.setTo_user_id(userId);
-            List<Relations> relationsList = relationMapper.getById(relationSearchDTO);
-            if (relationsList != null && relationsList.size() > 0) {
-                userVO.set_follow(true);
-            } else {
-                userVO.set_follow(false);
-            }
+            userVO.set_follow(commonService.getRelation(currentId, userId));
 
             commentVO.setUser(userVO);
             commentVOs.add(commentVO);

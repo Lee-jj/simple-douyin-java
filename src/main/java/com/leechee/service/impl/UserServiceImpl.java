@@ -1,7 +1,5 @@
 package com.leechee.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,14 +8,12 @@ import org.springframework.util.DigestUtils;
 
 import com.leechee.constant.MessageConstant;
 import com.leechee.context.BaseContext;
-import com.leechee.dto.RelationSearchDTO;
 import com.leechee.dto.UserInfoDTO;
 import com.leechee.dto.UserRegisterLoginDTO;
-import com.leechee.entity.Relations;
 import com.leechee.entity.Users;
 import com.leechee.exception.UserException;
-import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
+import com.leechee.service.CommonService;
 import com.leechee.service.UserService;
 import com.leechee.vo.UserVO;
 
@@ -27,7 +23,7 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private RelationMapper relationMapper;
+    private CommonService commonService;
 
     @Value("${douyin.default.avatar}")
     private String avatar;
@@ -112,15 +108,8 @@ public class UserServiceImpl implements UserService{
         BeanUtils.copyProperties(usersDB, userVO);
 
         // 获取关注信息
-        RelationSearchDTO relationSearchDTO = new RelationSearchDTO();
-        relationSearchDTO.setFrom_user_id(BaseContext.getCurrentId());
-        relationSearchDTO.setTo_user_id(userInfoDTO.getUser_id());
-        List<Relations> relations = relationMapper.getById(relationSearchDTO);
-        if (relations != null && relations.size() > 0) {
-            userVO.set_follow(true);
-        } else {
-            userVO.set_follow(false);
-        }
+        userVO.set_follow(commonService.getRelation(BaseContext.getCurrentId(), userInfoDTO.getUser_id()));
+
         return userVO;
     }
 }

@@ -22,6 +22,7 @@ import com.leechee.exception.RelationException;
 import com.leechee.mapper.MessageMapper;
 import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
+import com.leechee.service.CommonService;
 import com.leechee.service.RelationService;
 import com.leechee.vo.FriendUserVO;
 import com.leechee.vo.UserVO;
@@ -35,6 +36,8 @@ public class RelationServiceImpl implements RelationService {
     private UserMapper userMapper;
     @Autowired
     private MessageMapper messageMapper;
+    @Autowired
+    private CommonService commonService;
 
     /**
      * 关注与取消关注
@@ -110,15 +113,7 @@ public class RelationServiceImpl implements RelationService {
             UserVO userVO = new UserVO();
             BeanUtils.copyProperties(usersDB, userVO);
 
-            RelationSearchDTO relationSearchDTO2 = new RelationSearchDTO();
-            relationSearchDTO2.setFrom_user_id(currentId);
-            relationSearchDTO2.setTo_user_id(toUserId);
-            List<Relations> relations2 = relationMapper.getById(relationSearchDTO2);
-            if (relations2!= null && relations2.size() > 0) {
-                userVO.set_follow(true);
-            } else {
-                userVO.set_follow(false);
-            }
+            userVO.set_follow(commonService.getRelation(currentId, toUserId));
 
             userVOs.add(userVO);
         }
@@ -147,15 +142,7 @@ public class RelationServiceImpl implements RelationService {
             UserVO userVO = new UserVO();
             BeanUtils.copyProperties(usersDB, userVO);
 
-            RelationSearchDTO relationSearchDTO2 = new RelationSearchDTO();
-            relationSearchDTO2.setFrom_user_id(currentId);
-            relationSearchDTO2.setTo_user_id(fromUserId);
-            List<Relations> relations2 = relationMapper.getById(relationSearchDTO2);
-            if (relations2!= null && relations2.size() > 0) {
-                userVO.set_follow(true);
-            } else {
-                userVO.set_follow(false);
-            }
+            userVO.set_follow(commonService.getRelation(currentId, fromUserId));
 
             userVOs.add(userVO);
         }

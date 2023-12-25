@@ -24,19 +24,15 @@ import com.leechee.constant.FrameLengthConstant;
 import com.leechee.constant.MessageConstant;
 import com.leechee.context.BaseContext;
 import com.leechee.dto.DeleteVideoDTO;
-import com.leechee.dto.FavoriteSearchDTO;
-import com.leechee.dto.RelationSearchDTO;
 import com.leechee.dto.UserInfoDTO;
-import com.leechee.entity.Favorites;
-import com.leechee.entity.Relations;
 import com.leechee.entity.Users;
 import com.leechee.entity.Videos;
 import com.leechee.exception.PublishException;
 import com.leechee.mapper.CommentMapper;
 import com.leechee.mapper.FavoriteMapper;
-import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
 import com.leechee.mapper.VideoMapper;
+import com.leechee.service.CommonService;
 import com.leechee.service.PublishService;
 import com.leechee.vo.UserVO;
 import com.leechee.vo.VideoVO;
@@ -49,11 +45,11 @@ public class PublishServiceImpl implements PublishService{
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private RelationMapper relationMapper;
-    @Autowired
     private FavoriteMapper favoriteMapper;
     @Autowired
     private CommentMapper commentMapper;
+    @Autowired
+    private CommonService commonService;
 
     /**
      * 上传视频
@@ -102,26 +98,10 @@ public class PublishServiceImpl implements PublishService{
             Long currentId = BaseContext.getCurrentId();
 
             // 查找关注信息
-            RelationSearchDTO relationSearchDTO = new RelationSearchDTO();
-            relationSearchDTO.setFrom_user_id(currentId);
-            relationSearchDTO.setTo_user_id(videos.getUser_id());
-            List<Relations> relations = relationMapper.getById(relationSearchDTO);
-            if (relations != null && relations.size() > 0) {
-                userVO.set_follow(true);
-            } else {
-                userVO.set_follow(false);
-            }
+            userVO.set_follow(commonService.getRelation(currentId, videos.getUser_id()));
 
             // 查找点赞信息
-            FavoriteSearchDTO favoriteSearchDTO = new FavoriteSearchDTO();
-            favoriteSearchDTO.setUser_id(currentId);
-            favoriteSearchDTO.setVideo_id(videos.getId());
-            List<Favorites> favorites = favoriteMapper.getById(favoriteSearchDTO);
-            if (favorites != null && favorites.size() > 0) {
-                videoVO.set_favorite(true);
-            } else {
-                videoVO.set_favorite(false);
-            }
+            videoVO.set_favorite(commonService.getFavorite(currentId, videos.getId()));
 
             videoVO.setAuthor(userVO);
             videoVOList.add(videoVO);

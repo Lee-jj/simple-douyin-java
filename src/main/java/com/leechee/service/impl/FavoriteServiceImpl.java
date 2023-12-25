@@ -13,17 +13,15 @@ import com.leechee.constant.StatusConstant;
 import com.leechee.context.BaseContext;
 import com.leechee.dto.FavoriteDTO;
 import com.leechee.dto.FavoriteSearchDTO;
-import com.leechee.dto.RelationSearchDTO;
 import com.leechee.dto.UserInfoDTO;
 import com.leechee.entity.Favorites;
-import com.leechee.entity.Relations;
 import com.leechee.entity.Users;
 import com.leechee.entity.Videos;
 import com.leechee.exception.FavoriteException;
 import com.leechee.mapper.FavoriteMapper;
-import com.leechee.mapper.RelationMapper;
 import com.leechee.mapper.UserMapper;
 import com.leechee.mapper.VideoMapper;
+import com.leechee.service.CommonService;
 import com.leechee.service.FavoriteService;
 import com.leechee.vo.UserVO;
 import com.leechee.vo.VideoVO;
@@ -38,7 +36,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Autowired
     private VideoMapper videoMapper;
     @Autowired
-    private RelationMapper relationMapper;
+    private CommonService commonService;
 
     /**
      * 点赞操作
@@ -137,26 +135,10 @@ public class FavoriteServiceImpl implements FavoriteService {
             BeanUtils.copyProperties(usersDB, userVO);
 
             // 设置关注信息
-            RelationSearchDTO relationSearchDTO = new RelationSearchDTO();
-            relationSearchDTO.setFrom_user_id(currentId);
-            relationSearchDTO.setTo_user_id(authorId);
-            List<Relations> relations = relationMapper.getById(relationSearchDTO);
-            if (relations != null && relations.size() > 0) {
-                userVO.set_follow(true);
-            } else {
-                userVO.set_follow(false);
-            }
+            userVO.set_follow(commonService.getRelation(currentId, authorId));
 
             // 查找点赞信息
-            FavoriteSearchDTO favoriteSearchDTO2 = new FavoriteSearchDTO();
-            favoriteSearchDTO2.setUser_id(currentId);
-            favoriteSearchDTO2.setVideo_id(video_id);
-            List<Favorites> favorites2 = favoriteMapper.getById(favoriteSearchDTO2);
-            if (favorites2 != null && favorites2.size() > 0) {
-                videoVO.set_favorite(true);
-            } else {
-                videoVO.set_favorite(false);
-            }
+            videoVO.set_favorite(commonService.getFavorite(currentId, video_id));
 
             videoVO.setAuthor(userVO);
             videoList.add(videoVO);
