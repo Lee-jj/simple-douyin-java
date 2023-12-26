@@ -33,7 +33,7 @@ public class CommentController {
      * @return
      */
     @PostMapping("/action/")
-    @CacheEvict(value = "commentCache", key = "#commentActionDTO.video_id")
+    @CacheEvict(value = "commentCache", allEntries = true)
     public CommentActionResult action(CommentActionDTO commentActionDTO) {
         log.info("添加或删除评论,{}", commentActionDTO);
         CommentVO comment = commentService.action(commentActionDTO);
@@ -46,7 +46,7 @@ public class CommentController {
      * @return
      */
     @GetMapping("/list/")
-    @Cacheable(value = "commentCache", key = "#commentListDTO.video_id")
+    @Cacheable(value = "commentCache", key = "#commentListDTO.video_id + ':' + #commentListDTO.token")
     public CommentListResult list(CommentListDTO commentListDTO) {
         log.info("获取视频评论列表,{}", commentListDTO);
         List<CommentVO> commentVOs = commentService.list(commentListDTO);
