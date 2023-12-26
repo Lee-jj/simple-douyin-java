@@ -16,6 +16,14 @@ spring:
   output:
     ansi:
       enabled: always # SpringBoot配置控制台彩色日志输出
+  redis:
+    data:
+      host: ${douyin.redis.host}
+      port: ${douyin.redis.port}
+      password: ${douyin.redis.password}
+      database: ${douyin.redis.database}
+  cache:
+    type: redis
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
