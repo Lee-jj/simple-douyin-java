@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.leechee.annotation.OperationLog;
 import com.leechee.constant.JwtClaimsConstant;
+import com.leechee.entity.Logs;
 import com.leechee.properties.JwtProperties;
 import com.leechee.utils.JwtUtil;
 
@@ -92,6 +93,16 @@ public class OperationLogAspect {
         System.out.printf("costTime: %s\n", costTime);
 
         // TODO 记录日志
+        // Logs logs = Logs.builder()
+        //        .operation_user_id(userId)
+        //        .method_name(methodName)
+        //        .ip_address(ipAddr)
+        //        .url(url)
+        //        .cost_time(costTime)
+        //        .description(description)
+        //        .operation_date(operateTime)
+        //        .class_name(className)
+        //        .build();
 
 
         return result;

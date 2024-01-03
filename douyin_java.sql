@@ -66,3 +66,17 @@ CREATE TABLE `relations`  (
   `to_user_id` bigint NOT NULL COMMENT '被关注者id',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_bin COMMENT = '关注表';
+
+DROP TABLE IF EXISTS `logs`;
+CREATE TABLE `logs` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `operation_user_id` varchar(64) NOT NULL COMMENT '操作人id',
+  `operation_date` datetime NULL DEFAULT NULL COMMENT '操作时间',
+  `class_name` varchar(64) NOT NULL COMMENT '操作类名',
+  `method_name` varchar(32) NOT NULL COMMENT '操作方法名',
+  `ip_address` varchar(128) NOT NULL COMMENT 'ip地址',
+  `url` varchar(128) NOT NULL COMMENT '请求的url',
+  `cost_time` bigint NOT NULL COMMENT '操作执行耗时(ms)',
+  `description` varchar(255) NOT NULL COMMENT '操作描述',
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_bin COMMENT = '操作日志表';
