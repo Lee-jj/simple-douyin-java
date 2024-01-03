@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leechee.annotation.OperationLog;
 import com.leechee.dto.FeedDTO;
 import com.leechee.result.FeedResult;
 import com.leechee.service.FeedService;
@@ -28,6 +29,7 @@ public class FeedController {
      * @return
      */
     @GetMapping
+    @OperationLog(description = "获取视频流")
     public FeedResult getFeed(FeedDTO feedDTO) {
         log.info("获取视频流,{}", feedDTO);
         List<VideoVO> videoList = feedService.getFeed(feedDTO);
