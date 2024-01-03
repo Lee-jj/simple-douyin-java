@@ -74,6 +74,7 @@ CREATE TABLE `logs` (
   `operation_date` datetime NULL DEFAULT NULL COMMENT '操作时间',
   `class_name` varchar(64) NOT NULL COMMENT '操作类名',
   `method_name` varchar(32) NOT NULL COMMENT '操作方法名',
+  `request_type` varchar(16) NOT NULL COMMENT '请求类型',
   `ip_address` varchar(128) NOT NULL COMMENT 'ip地址',
   `url` varchar(128) NOT NULL COMMENT '请求的url',
   `cost_time` bigint NOT NULL COMMENT '操作执行耗时(ms)',

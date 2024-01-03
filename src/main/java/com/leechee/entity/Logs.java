@@ -26,6 +26,8 @@ public class Logs implements Serializable{
 
     private String method_name; // 操作方法名
 
+    private String request_type; // 请求类型
+
     private String ip_address;  // 操作ip地址
 
     private String url; // 访问url

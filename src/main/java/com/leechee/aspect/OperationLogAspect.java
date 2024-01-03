@@ -53,7 +53,9 @@ public class OperationLogAspect {
         try {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getSecretKey(), token);
             userId = claims.get(JwtClaimsConstant.USER_ID).toString();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            userId = "unlog";
+        }
 
         // 获取当前操作时间
         LocalDateTime operateTime = LocalDateTime.now();
@@ -74,6 +76,9 @@ public class OperationLogAspect {
 
         // 获取请求URL
         String url = request.getRequestURL().toString();
+
+        // 获取请求类型
+        String requestType = request.getMethod();
 
 
         long begin = System.currentTimeMillis();
@@ -97,6 +102,7 @@ public class OperationLogAspect {
                .description(description)
                .operation_date(operateTime)
                .class_name(className)
+               .request_type(requestType)
                .build();
         logMapper.insert(logs);
 
