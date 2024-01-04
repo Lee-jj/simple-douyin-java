@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leechee.annotation.OperationLog;
 import com.leechee.dto.FavoriteDTO;
 import com.leechee.dto.UserInfoDTO;
 import com.leechee.result.FavoriteListResult;
@@ -34,6 +35,7 @@ public class FavoriteController {
      */
     @PostMapping("/action/")
     @CacheEvict(value = "favoriteCache", allEntries = true)
+    @OperationLog(description = "点赞操作")
     public Result action(FavoriteDTO favoriteDTO) {
         log.info("点赞与取消操作,{}", favoriteDTO);
         favoriteService.action(favoriteDTO);
@@ -47,6 +49,7 @@ public class FavoriteController {
      */
     @GetMapping("/list/")
     @Cacheable(value = "favoriteCache", key = "#userInfoDTO.user_id + ':' + #userInfoDTO.token")
+    @OperationLog(description = "获取用户点赞列表")
     public FavoriteListResult list(UserInfoDTO userInfoDTO) {
         log.info("获取用户点赞列表，{}", userInfoDTO);
         List<VideoVO> videoList = favoriteService.list(userInfoDTO);

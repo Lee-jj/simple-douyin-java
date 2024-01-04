@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leechee.annotation.OperationLog;
 import com.leechee.constant.JwtClaimsConstant;
 import com.leechee.dto.UserInfoDTO;
 import com.leechee.dto.UserRegisterLoginDTO;
@@ -38,6 +39,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/register/")
+    @OperationLog(description = "用户注册")
     public UserResult register(UserRegisterLoginDTO userRegisterLoginDTO) {
         log.info("用户注册,{}", userRegisterLoginDTO);
         Long userId = userService.register(userRegisterLoginDTO);
@@ -54,6 +56,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login/")
+    @OperationLog(description = "用户登录")
     public UserResult login(UserRegisterLoginDTO userRegisterLoginDTO) {
         log.info("用户登录,{}", userRegisterLoginDTO);
         Long userId = userService.login(userRegisterLoginDTO);
@@ -69,6 +72,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/")
+    @OperationLog(description = "获取用户信息")
     public UserInfoResult getUserInfo(UserInfoDTO userInfoDTO) {
         log.info("获取用户信息,{}", userInfoDTO);
         UserVO userVO = userService.getUserInfo(userInfoDTO);

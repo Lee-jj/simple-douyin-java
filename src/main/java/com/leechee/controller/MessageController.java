@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leechee.annotation.OperationLog;
 import com.leechee.dto.MessageChatDTO;
 import com.leechee.dto.MessageDTO;
 import com.leechee.result.MessageListResult;
@@ -31,6 +32,7 @@ public class MessageController {
      * @return
      */
     @PostMapping("/action/")
+    @OperationLog(description = "发送消息")
     public Result action(MessageDTO messageDTO) {
         log.info("发送消息,{}", messageDTO);
         messageService.action(messageDTO);
@@ -43,6 +45,7 @@ public class MessageController {
      * @return
      */
     @GetMapping("/chat/")
+    @OperationLog(description = "获取聊天记录")
     public MessageListResult list(MessageChatDTO messageChatDTO) {
         log.info("获取聊天记录,{}", messageChatDTO);
         List<MessageVO> messageVOs = messageService.list(messageChatDTO);

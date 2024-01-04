@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.leechee.annotation.OperationLog;
 import com.leechee.constant.MessageConstant;
 import com.leechee.dto.DeleteVideoDTO;
 import com.leechee.dto.UserInfoDTO;
@@ -43,6 +44,7 @@ public class PublishController {
      * @return
      */
     @PostMapping("/action/")
+    @OperationLog(description = "上传视频")
     public Result action(@RequestPart("data") MultipartFile file, @RequestPart("token") String token, @RequestParam("title") String title) {
         log.info("文件上传标题,{}", title);
         try {
@@ -84,6 +86,7 @@ public class PublishController {
      * @return
      */
     @GetMapping("/list/")
+    @OperationLog(description = "获取用户发布列表")
     public VideoPublishResult list(UserInfoDTO userInfoDTO) {
         log.info("获取用户发布列表，{}", userInfoDTO);
         List<VideoVO> videoList = publishService.list(userInfoDTO);
@@ -96,6 +99,7 @@ public class PublishController {
      * @return
      */
     @DeleteMapping
+    @OperationLog(description = "删除视频")
     public Result delete(DeleteVideoDTO deleteVideoDTO) {
         log.info("删除视频,{}", deleteVideoDTO);
         publishService.deleteVideo(deleteVideoDTO);
